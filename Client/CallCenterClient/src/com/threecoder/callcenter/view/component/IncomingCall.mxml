@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="1262" height="100%" xmlns:component="com.threecoder.callcenter.view.component.*"
+		 creationComplete="init();">
+	<fx:Script>
+		<![CDATA[
+			import com.threecoder.callcenter.model.constant.SocketMessageType;
+			import com.threecoder.callcenter.model.vo.StaffVO;
+			import com.threecoder.callcenter.model.vo.TaskTypeItemVO;
+			import com.threecoder.callcenter.model.vo.TaskVO;
+			import com.threecoder.callcenter.view.event.AppEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			
+			private var _taskVO :TaskVO = new TaskVO();
+			
+			private function init() :void {
+				staffSearch.addEventListener(AppEvent.SELECT_STAFF, onSelectStaff);
+			}
+			
+			public function set taskId( value :uint ) :void {
+				_taskVO.taskId = value;
+			}
+			
+			public function set taskTypeList( arr :Array ) :void {
+				var dataProviderArr :Array = new Array();
+				dataProviderArr.push( new ArrayCollection(), 
+					new ArrayCollection(),
+					new ArrayCollection());
+				
+				for each(var obj :Object in arr) {
+					var taskTypeItem :TaskTypeItemVO = new TaskTypeItemVO();
+					taskTypeItem.taskId = obj.taskId;
+					taskTypeItem.taskName = obj.taskName;
+					taskTypeItem.taskType = obj.taskType;
+					ArrayCollection(dataProviderArr[ taskTypeItem.taskType - 1 ]).addItem( taskTypeItem );
+				}
+				
+				taskSelector0.taskTypeList = dataProviderArr[ 0 ];
+				taskSelector1.taskTypeList = dataProviderArr[ 1 ];
+				taskSelector2.taskTypeList = dataProviderArr[ 2 ];
+			}
+			
+			private function onSelectStaff( event :AppEvent ) :void {
+				var staffVO :StaffVO = event.data as StaffVO;
+				if( !staffVO ) {
+					return;
+				}
+				
+				staffDispatch.staffName = staffVO.name;
+				staffDispatch.department = staffVO.department;
+				staffDispatch.callNumber = staffVO.callNumber;
+				
+				_taskVO.userNumber = staffVO.userNumber;
+			}
+			
+			public function set phoneNumber( phoneNumber :String ) :void {
+				callerInfo.phoneNumber = phoneNumber;
+				_taskVO.phoneNumber = phoneNumber;
+			}
+			
+			public function set department( department :String ) :void {
+				callerInfo.department = department;
+				_taskVO.department = department;
+			}
+			
+			public function set datetime( datetime :String ) :void {
+				callerInfo.datetime = datetime;
+			}
+			
+			public function set searchResult( ac :ArrayCollection ) :void {
+				staffSearch.searchResult = ac;
+			}
+			
+			private function onDispatch() :void {
+				var taskTypeArr :Array = taskSelector0.getSelected().concat( taskSelector1.getSelected() );
+				taskTypeArr = taskTypeArr.concat( taskSelector2.getSelected() );
+				
+				_taskVO.taskState = 1;
+				_taskVO.isReserve = 0;
+				_taskVO.taskType = taskTypeArr;
+				
+				var appEvent :AppEvent = new AppEvent( AppEvent.DISPATCH_TASK );
+				appEvent.data = _taskVO;
+				dispatchEvent( appEvent );
+			}
+			
+			private function onReserve() :void {
+				var taskTypeArr :Array = taskSelector0.getSelected().concat( taskSelector1.getSelected() );
+				taskTypeArr = taskTypeArr.concat( taskSelector2.getSelected() );
+				
+				_taskVO.taskState = 2;
+				_taskVO.isReserve = 1;
+				_taskVO.datetime = reservationTime.text;
+				_taskVO.taskType = taskTypeArr;
+				
+				var appEvent :AppEvent = new AppEvent( AppEvent.RESERVE_TASK );
+				appEvent.data = _taskVO;
+				dispatchEvent( appEvent );
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<component:TaskStatistics/>
+	<component:CallerInfo id="callerInfo" x="210"/>
+	
+	<component:StaffSearch id="staffSearch" x="210" top="30" bottom="245"/>
+	
+	<component:TaskSelector id="taskSelector0" x="720" top="30" bottom="245" label="检查类："/>
+	<component:TaskSelector id="taskSelector1" x="904" top="30" bottom="245" label="物品类："/>
+	<component:TaskSelector id="taskSelector2" x="1088" top="30" bottom="245" label="其他类："/>
+	
+	<component:TaskDispatch x="720" bottom="30" label="检查类："/>
+	<component:TaskDispatch x="904" bottom="30" label="物品类："/>
+	<component:TaskDispatch x="1088" bottom="30" label="其他类："/>
+	
+	<component:StaffDispatch id="staffDispatch" x="210" bottom="124"/>
+	
+	<s:Label text="预约时间：" x="210" bottom="30" styleName="InfoSize"/>
+	<s:TextInput id="reservationTime" x="310" bottom="28"/>
+	
+	<mx:HBox x="200" bottom="5" width="1032">
+		<s:Spacer width="100%"/>
+		<s:Button label="派遣" click="onDispatch();"/>
+		<s:Button label="预约" click="onReserve();"/>
+		<s:Button label="取消"/>
+		<s:Spacer width="100%"/>
+	</mx:HBox>
+</s:Group>

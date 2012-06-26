@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="510" height="106" fontSize="16">
+	<fx:Script>
+		<![CDATA[
+			public function set staffName( name :String ):void{  
+				nameLabel.text = name;
+			}
+			
+			public function set callNumber( callNumber :String ) :void {
+				callNumLabel.text = callNumber;
+			}
+			
+			public function set department( department :String ) :void {
+				departmentLabel.text = department;
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Label text="派遣人员："/>
+	
+	<s:Label x="0" y="30" text="姓名："/>
+	<s:Label id="nameLabel" x="60" y="30"/>
+	<s:Label x="0" y="60" text="呼机号："/>
+	<s:Label id="callNumLabel" x="60" y="60"/>
+	<s:Label x="0" y="90" text="部门："/>
+	<s:Label id="departmentLabel" x="60" y="90"/>
+	
+</s:Group>

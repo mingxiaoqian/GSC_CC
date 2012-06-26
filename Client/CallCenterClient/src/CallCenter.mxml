@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   xmlns:component="com.threecoder.callcenter.view.component.*"
+					   creationComplete="init();"
+					   showStatusBar="false">
+	<fx:Style source="assets/css/style.css"/>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.threecoder.callcenter.ApplicationFacade;
+			import com.threecoder.callcenter.view.event.AppEvent;
+			import com.threecoder.callcenter.view.popup.component.IncomingCallAlert;
+			
+			import spark.components.Window;
+			
+			public static const MODE_NEW_TASK :String = "NewTask";
+			public static const MODE_TASK_LIST :String = "TaskList";
+			
+			[Bindable]
+			private var _mode :String = MODE_NEW_TASK;
+			
+			private var facade :ApplicationFacade = ApplicationFacade.getInstance();
+			
+			private function init() :void {
+				facade.startup( this );
+				maximize();
+				
+				addCustomMenu();
+			}
+			
+			private function addCustomMenu() :void {
+				var fileMenu :NativeMenuItem;
+				var windowMenu :NativeMenuItem;
+				var helpMenu :NativeMenuItem;
+				
+				if( NativeWindow.supportsMenu ) {
+					nativeWindow.menu = new NativeMenu();
+					nativeWindow.menu.addEventListener(Event.SELECT, selectCommandMenu);
+					fileMenu = nativeWindow.menu.addItem( new NativeMenuItem( "文件" ) );
+					windowMenu = nativeWindow.menu.addItem( new NativeMenuItem( "窗口" ) );
+					helpMenu = nativeWindow.menu.addItem( new NativeMenuItem( "帮助" ) );
+				}
+				
+				if( NativeApplication.supportsMenu ) {
+					nativeApplication.menu.addEventListener(Event.SELECT, selectCommandMenu);
+					fileMenu = nativeApplication.menu.addItem( new NativeMenuItem( "文件" ) );
+					windowMenu = nativeApplication.menu.addItem( new NativeMenuItem( "窗口" ) );
+					helpMenu = nativeApplication.menu.addItem( new NativeMenuItem( "帮助" ) );
+				}
+				
+				fileMenu.submenu = createFileMenu();
+				windowMenu.submenu = createWindowMenu();
+				helpMenu.submenu = createHelpMenu();
+			}
+			
+			private function createFileMenu() :NativeMenu {
+				var fileMenu:NativeMenu = new NativeMenu();
+				fileMenu.addEventListener(Event.SELECT, selectCommandMenu);
+				
+				var newCommand:NativeMenuItem = fileMenu.addItem(new NativeMenuItem("新建任务"));
+				newCommand.addEventListener(Event.SELECT, selectCommand);
+				
+				fileMenu.addItem( new NativeMenuItem( "", true ) );
+				
+				var exitCommand:NativeMenuItem = fileMenu.addItem(new NativeMenuItem("退出"));
+				exitCommand.addEventListener(Event.SELECT, selectCommand);
+				
+				return fileMenu;
+			}
+			
+			private function createWindowMenu() :NativeMenu {
+				var windowMenu:NativeMenu = new NativeMenu();
+				windowMenu.addEventListener(Event.SELECT, selectCommandMenu);
+				
+				var taskListCommand:NativeMenuItem = windowMenu.addItem(new NativeMenuItem("任务列表"));
+				taskListCommand.addEventListener(Event.SELECT, selectCommand);
+				
+				var newCallerCommand:NativeMenuItem = windowMenu.addItem(new NativeMenuItem("添加来电者信息"));
+				newCallerCommand.addEventListener(Event.SELECT, selectCommand);
+				
+				return windowMenu;
+			}
+			
+			private function createHelpMenu() :NativeMenu {
+				return null;
+			}
+			
+			private function selectCommandMenu( event :Event ) :void {
+				
+			}
+			
+			private function selectCommand(event:Event):void {
+				trace("Selected command: " + event.target.label);
+				switch( event.target.label ) {
+					case "退出":
+						exit();
+						break;
+					case "新建任务":
+						_mode = MODE_NEW_TASK;
+						break;
+					case "任务列表":
+						_mode = MODE_TASK_LIST;
+						break;
+					case "添加来电者信息":
+						dispatchEvent( new AppEvent(AppEvent.ADD_CALLER) );
+						break;
+					default:
+						break;
+				}
+			}
+			
+			private function onClick() :void {
+				//createNewWindow();
+				dispatchEvent( new AppEvent(AppEvent.SHOW_INCOMING) );
+			}
+			
+			public function createNewWindow() :void {
+				var incomingCallAlert :IncomingCallAlert = new IncomingCallAlert();
+				incomingCallAlert.open(true);
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<component:DispatcherInfo/>
+	
+	<component:IncomingCall id="incomingCall" horizontalCenter="0" top="110" bottom="30"
+							includeInLayout="{_mode == MODE_NEW_TASK}"
+							visible="{_mode == MODE_NEW_TASK}"/>
+	
+	<component:TaskList id="taskList" horizontalCenter="0" top="110" bottom="30"
+						includeInLayout="{_mode == MODE_TASK_LIST}"
+						visible="{_mode == MODE_TASK_LIST}"/>
+	
+	<component:Footer bottom="0"/>
+</s:WindowedApplication>

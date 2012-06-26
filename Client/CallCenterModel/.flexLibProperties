@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="com.threecoder.callcenter.controller.command.startup.PrepareModelCommand"/>
+    <classEntry path="com.threecoder.callcenter.model.proxy.SocketProxy"/>
+    <classEntry path="com.threecoder.callcenter.model.constant.ModelConstants"/>
+    <classEntry path="com.threecoder.callcenter.model.constant.SocketMessageType"/>
+    <classEntry path="com.threecoder.callcenter.model.vo.TaskDispatchVO"/>
+    <classEntry path="com.threecoder.callcenter.model.vo.CallerInfoVO"/>
+    <classEntry path="com.threecoder.callcenter.model.vo.IVO"/>
+    <classEntry path="com.threecoder.callcenter.model.vo.SearchStaffVO"/>
+    <classEntry path="com.threecoder.callcenter.model.vo.StaffItemVO"/>
+    <classEntry path="com.threecoder.callcenter.model.vo.StaffVO"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

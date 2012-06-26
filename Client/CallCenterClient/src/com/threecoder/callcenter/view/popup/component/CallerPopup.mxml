@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="500" height="350"
+			   implements="com.threecoder.callcenter.view.popup.component.IPopup"
+			   title="{windowTitle}"
+			   close="onCancel();">
+	<fx:Script>
+		<![CDATA[
+			import com.threecoder.callcenter.model.vo.CallerVO;
+			import com.threecoder.callcenter.view.popup.event.PopupActionEvent;
+			
+			[Bindable]
+			private var windowTitle :String = "添加来电者信息";
+			
+			[Bindable]
+			private var caller :CallerVO;
+			
+			public function setData( data:Object ):void {
+				if( data.caller ) {
+					
+				}
+			}
+			
+			public function getEvents( ):Array {
+				return [ PopupActionEvent.ADD,
+							PopupActionEvent.CANCEL];
+			}
+			
+			private function reapFields( vo:CallerVO ):void {
+				vo.name = callerName.text;
+				vo.phoneNumber = callerPhoneNumber.text;
+				vo.department = callerDepartment.text;
+			}
+			
+			private function onCancel() :void {
+				dispatchEvent( new PopupActionEvent( PopupActionEvent.CANCEL ) );
+			}
+			
+			private function onAdd() :void {
+				var newCaller :CallerVO = new CallerVO();
+				reapFields( newCaller );
+				dispatchEvent( new PopupActionEvent( PopupActionEvent.ADD, newCaller ) );
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout gap="20" horizontalAlign="center" verticalAlign="middle"/>
+	</s:layout>
+	
+	<s:TextInput id="callerName" width="460" height="35" fontSize="16" 
+				 prompt="姓名" text="{caller.name}"/>
+	
+	<s:TextInput id="callerPhoneNumber" width="460" height="35" fontSize="16" 
+				 prompt="电话号码" text="{caller.phoneNumber}"/>
+	
+	<s:TextInput id="callerDepartment" width="460" height="35" fontSize="16" 
+				 prompt="部门" text="{caller.department}"/>
+	
+	<s:HGroup gap="20" width="100%" horizontalAlign="center">
+		<!-- ADD -->
+		<s:Button width="100" height="50" label="添加" click="onAdd()"/>
+		
+		<!-- CANCEL -->
+		<s:Button width="100" height="50" label="取消" click="onCancel()"/>
+	</s:HGroup>
+</s:TitleWindow>

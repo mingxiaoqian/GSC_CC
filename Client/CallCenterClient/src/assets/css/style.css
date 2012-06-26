@@ -1,0 +1,24 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+mx|Canvas.Title {
+	borderSkin: Embed(source="assets/CCResources.swf", symbol="TitleBorder");
+}
+
+mx|Button.Close {
+	upSkin: Embed(source="assets/CCResources.swf", symbol="CloseIcon");
+	overSkin: Embed(source="assets/CCResources.swf", symbol="CloseIcon");
+	downSkin: Embed(source="assets/CCResources.swf", symbol="CloseIcon");
+}
+
+s|Label.InfoSize {
+	fontSize: 16;
+}
+
+global
+{
+	content-background-color: #EDF5F9;
+	fontSize: 20;
+}
+

@@ -1,0 +1,52 @@
+需要从服务器端发到客户端的消息
+1、弹屏事件
+2、客户电话号码，
+3、电话号码，客户姓名，职位等信息
+4、响应查询的结果（放到耗时队列里面）
+
+
+从客户端发到服务器端的消息
+1、
+
+
+msgtype：33011001   弹窗
+
+msgtype：33011002   电话号码
+phNumber ：String
+
+msgtype：33011003    员工信息/来电者信息
+Name：    String
+性别：    String
+岗位：    String
+部门：    String
+呼入时间：String
+
+
+
+msgtype：33012001   查询员工信息
+Name：    String
+部门：    String
+电话号码：String
+状态：    String
+
+msgtype：33011004    响应的员工信息
+Name：    String
+性别：    String
+部门：    String
+岗位：    String
+状态：		String
+电话：    String
+
+#IF 0
+msgtype： 33012002   电话请求消息
+电话:     String
+
+//可有可无
+{
+msgtype: 33011005    电话请求响应状态
+状态：    String
+}
+#ENDIF
+
+msgtype： 33012004   心跳请求
+
